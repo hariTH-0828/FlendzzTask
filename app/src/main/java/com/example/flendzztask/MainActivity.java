@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.api.UserApi;
@@ -23,6 +25,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements OnItemClickListener{
     List<User> listUsers;
     RecyclerView recyclerView;
+    Button RetryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.employee_recyclerview);
+        RetryBtn = findViewById(R.id.retryBtn);
         listUsers = new ArrayList<>();
 
         RetrofitService retrofitService = new RetrofitService();
@@ -47,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
             @Override
             public void onFailure(@NonNull Call<List<User>> call,@NonNull Throwable t) {
-                Toast.makeText(getApplicationContext(), "Connection failed...", Toast.LENGTH_SHORT).show();
+                RetryBtn.setVisibility(View.VISIBLE);
+                Toast.makeText(getApplicationContext(), "No Internet Access..", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -86,5 +91,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
                 Toast.makeText(getApplicationContext(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void onRetry(View view) {
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 }
